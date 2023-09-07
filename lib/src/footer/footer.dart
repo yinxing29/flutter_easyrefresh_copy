@@ -13,13 +13,13 @@ abstract class Footer {
   @Deprecated('目前还没有找到方案,设置无效')
   final bool float;
   // 完成延时
-  final Duration completeDuration;
+  final Duration? completeDuration;
   /// 是否开启无限加载
   final bool enableInfiniteLoad;
   /// 开启震动反馈
   final bool enableHapticFeedback;
 
-  Footer({
+  const Footer({
     this.extent = 60.0,
     this.triggerDistance = 70.0,
     this.float = false,
@@ -47,8 +47,8 @@ abstract class Footer {
       //footerFloat: float,
       bindLoadIndicator: (finishLoad, resetLoadState) {
         if (easyRefresh.controller != null) {
-          easyRefresh.controller.finishLoadCallBack = finishLoad;
-          easyRefresh.controller.resetLoadStateCallBack = resetLoadState;
+          easyRefresh.controller!.finishLoadCallBack = finishLoad;
+          easyRefresh.controller!.resetLoadStateCallBack = resetLoadState;
         }
       },
     );
@@ -63,9 +63,11 @@ abstract class Footer {
       double loadIndicatorExtent,
       AxisDirection axisDirection,
       bool float,
-      Duration completeDuration,
+      Duration? completeDuration,
       bool enableInfiniteLoad,
-      bool success, bool noMore);
+      bool success,
+      bool noMore,
+  );
 }
 
 /// 通用Footer构造器
@@ -78,7 +80,7 @@ class CustomFooter extends Footer {
     extent = 60.0,
     triggerDistance = 70.0,
     completeDuration,
-    @required this.footerBuilder,
+    required this.footerBuilder,
   }) : super (
     extent: extent,
     triggerDistance: triggerDistance,
@@ -89,7 +91,7 @@ class CustomFooter extends Footer {
   Widget contentBuilder(BuildContext context,
       LoadMode loadState, double pulledExtent,
       double loadTriggerPullDistance, double loadIndicatorExtent,
-      AxisDirection axisDirection, bool float, Duration completeDuration,
+      AxisDirection axisDirection, bool float, Duration? completeDuration,
       bool enableInfiniteLoad, bool success, bool noMore) {
     return footerBuilder(context, loadState, pulledExtent,
         loadTriggerPullDistance, loadIndicatorExtent, axisDirection, float,
@@ -98,11 +100,11 @@ class CustomFooter extends Footer {
 }
 
 /// 经典Footer
-class ClassicalFooter extends Footer{
+class ClassicalFooter extends Footer {
   /// Key
-  final Key key;
+  final Key? key;
   /// 方位
-  final AlignmentGeometry alignment;
+  final AlignmentGeometry? alignment;
   /// 提示加载文字
   final String loadText;
   /// 准备加载文字
@@ -126,7 +128,7 @@ class ClassicalFooter extends Footer{
   /// 更多信息文字颜色
   final Color infoColor;
 
-  ClassicalFooter({
+  const ClassicalFooter({
     extent = 60.0,
     triggerDistance = 70.0,
     float = false,
@@ -135,18 +137,18 @@ class ClassicalFooter extends Footer{
     enableHapticFeedback = true,
     this.key,
     this.alignment,
-    this.loadText: "Push to load",
-    this.loadReadyText: "Release to load",
-    this.loadingText: "Loading...",
-    this.loadedText: "Load completed",
-    this.loadFailedText: "Load failed",
-    this.noMoreText: "No more",
-    this.showInfo: true,
-    this.infoText: "Updated at %T",
-    this.bgColor: Colors.transparent,
-    this.textColor: Colors.black,
-    this.infoColor: Colors.teal,
-  }): super(
+    this.loadText = "Push to load",
+    this.loadReadyText = "Release to load",
+    this.loadingText = "Loading...",
+    this.loadedText = "Load completed",
+    this.loadFailedText = "Load failed",
+    this.noMoreText = "No more",
+    this.showInfo = true,
+    this.infoText = "Updated at %T",
+    this.bgColor = Colors.transparent,
+    this.textColor = Colors.black,
+    this.infoColor = Colors.teal,
+  }) : super(
     extent: extent,
     triggerDistance: triggerDistance,
     float: float,
@@ -156,11 +158,18 @@ class ClassicalFooter extends Footer{
   );
 
   @override
-  Widget contentBuilder(BuildContext context, LoadMode loadState,
-      double pulledExtent, double loadTriggerPullDistance,
-      double loadIndicatorExtent, AxisDirection axisDirection,
-      bool float, Duration completeDuration,
-      bool enableInfiniteLoad, bool success, bool noMore) {
+  Widget contentBuilder(
+      BuildContext context,
+      LoadMode loadState,
+      double pulledExtent,
+      double loadTriggerPullDistance,
+      double loadIndicatorExtent,
+      AxisDirection axisDirection,
+      bool float,
+      Duration? completeDuration,
+      bool enableInfiniteLoad,
+      bool success,
+      bool noMore,) {
     return ClassicalFooterWidget(
       key: key,
       classicalFooter: this,
@@ -186,17 +195,25 @@ class ClassicalFooterWidget extends StatefulWidget {
   final double loadIndicatorExtent;
   final AxisDirection axisDirection;
   final bool float;
-  final Duration completeDuration;
+  final Duration? completeDuration;
   final bool enableInfiniteLoad;
   final bool success;
   final bool noMore;
 
-  ClassicalFooterWidget({Key key,
-    this.loadState, this.classicalFooter,
-    this.pulledExtent, this.loadTriggerPullDistance,
-    this.loadIndicatorExtent, this.axisDirection, this.float,
-    this.completeDuration, this.enableInfiniteLoad,
-    this.success, this.noMore}) : super(key: key);
+  ClassicalFooterWidget({
+    Key? key,
+    this.loadState = LoadMode.inactive,
+    this.classicalFooter = const ClassicalFooter(),
+    this.pulledExtent = 0.0,
+    this.loadTriggerPullDistance = 0.0,
+    this.loadIndicatorExtent = 0.0,
+    this.axisDirection = AxisDirection.down,
+    this.float = false,
+    this.completeDuration,
+    this.enableInfiniteLoad = true,
+    this.success = true,
+    this.noMore = false,
+  }) : super(key: key);
 
   @override
   ClassicalFooterWidgetState createState() => ClassicalFooterWidgetState();
@@ -215,10 +232,10 @@ class ClassicalFooterWidgetState extends State<ClassicalFooterWidget>
   }
 
   // 动画
-  AnimationController _readyController;
-  Animation<double> _readyAnimation;
-  AnimationController _restoreController;
-  Animation<double> _restoreAnimation;
+  late AnimationController _readyController;
+  late Animation<double> _readyAnimation;
+  late AnimationController _restoreController;
+  late Animation<double> _restoreAnimation;
 
   // Icon旋转度
   double _iconRotationValue = 1.0;
@@ -266,15 +283,15 @@ class ClassicalFooterWidgetState extends State<ClassicalFooterWidget>
   }
 
   // 更新时间
-  DateTime _dateTime;
+  DateTime? _dateTime;
   // 获取更多信息
   String get _infoText {
     if (widget.loadState == LoadMode.loaded) {
       _dateTime = DateTime.now();
     }
-    String fillChar = _dateTime.minute < 10 ? "0" : "";
+    String fillChar = (_dateTime?.minute ?? 0) < 10 ? "0" : "";
     return widget.classicalFooter.infoText
-        .replaceAll("%T", "${_dateTime.hour}:$fillChar${_dateTime.minute}");
+        .replaceAll("%T", "${_dateTime?.hour}:$fillChar${_dateTime?.minute}");
   }
 
   @override
@@ -343,9 +360,9 @@ class ClassicalFooterWidgetState extends State<ClassicalFooterWidget>
           right: isVertical ? 0.0 : isReverse ? 0.0 : null,
           child: Container(
             alignment: widget.classicalFooter.alignment ??
-                isVertical ? !isReverse ? Alignment.topCenter
-                : Alignment.bottomCenter : isReverse
-                ? Alignment.centerRight : Alignment.centerLeft,
+                (isVertical ? (!isReverse ? Alignment.topCenter
+                : Alignment.bottomCenter) : (isReverse
+                ? Alignment.centerRight : Alignment.centerLeft)),
             width: !isVertical ? widget.loadIndicatorExtent
                 > widget.pulledExtent ? widget.loadIndicatorExtent
                 : widget.pulledExtent : double.infinity,

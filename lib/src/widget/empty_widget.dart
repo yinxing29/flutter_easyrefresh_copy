@@ -5,9 +5,12 @@ import 'package:flutter/widgets.dart';
 /// 空视图
 class EmptyWidget extends StatefulWidget {
   /// 子组件
-  final Widget child;
+  final Widget? child;
 
-  EmptyWidget({Key key, this.child}) : super(key: key);
+  EmptyWidget({
+    Key? key,
+    this.child,
+  }) : super(key: key);
 
   @override
   EmptyWidgetState createState() {
@@ -16,15 +19,15 @@ class EmptyWidget extends StatefulWidget {
 }
 class EmptyWidgetState extends State<EmptyWidget> {
   // 列表方向
-  ValueNotifier<AxisDirection> _axisDirectionNotifier;
+  late ValueNotifier<AxisDirection?> _axisDirectionNotifier;
 
   // 获取宽高
-  Size _size;
+  Size? _size;
 
   @override
   void initState() {
     super.initState();
-    _axisDirectionNotifier = ValueNotifier<AxisDirection>(null);
+    _axisDirectionNotifier = ValueNotifier<AxisDirection?>(null);
   }
 
   @override
@@ -51,8 +54,8 @@ class EmptyWidgetState extends State<EmptyWidget> {
     ): SliverList(
       delegate: SliverChildListDelegate([
         Container(
-          width: _size.width,
-          height: _size.height,
+          width: _size!.width,
+          height: _size!.height,
           child: widget.child,
         ),
       ]),
@@ -63,13 +66,13 @@ class EmptyWidgetState extends State<EmptyWidget> {
 /// 空视图Sliver组件
 class _SliverEmpty extends SingleChildRenderObjectWidget {
   // 列表方向
-  final ValueNotifier<AxisDirection> axisDirectionNotifier;
+  final ValueNotifier<AxisDirection?>? axisDirectionNotifier;
 
   const _SliverEmpty({
-    Key key,
-    Widget child,
+    Key? key,
+    Widget? child,
     this.axisDirectionNotifier,
-  }): super(key: key, child: child);
+  }) : super(key: key, child: child);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -78,28 +81,26 @@ class _SliverEmpty extends SingleChildRenderObjectWidget {
     );
   }
 }
+
 class _RenderSliverEmpty extends RenderSliverSingleBoxAdapter {
   // 列表方向
-  final ValueNotifier<AxisDirection> axisDirectionNotifier;
+  final ValueNotifier<AxisDirection?>? axisDirectionNotifier;
 
   _RenderSliverEmpty({
-    RenderBox child,
     this.axisDirectionNotifier,
-  }){
-    this.child = child;
-  }
+  });
 
   // 获取子组件大小
   double get childSize =>
-      constraints.axis == Axis.vertical ? child.size.height : child.size.width;
+      constraints.axis == Axis.vertical ? child?.size.height ?? 0.0 : child?.size.width ?? 0.0;
 
   // 空视图大小
-  double extent;
+  double? extent;
 
   @override
   void performLayout() {
-    axisDirectionNotifier.value = constraints.axisDirection;
-    child.layout(
+    axisDirectionNotifier?.value = constraints.axisDirection;
+    child?.layout(
       constraints.asBoxConstraints(
         maxExtent: constraints.remainingPaintExtent,
       ),
@@ -116,7 +117,7 @@ class _RenderSliverEmpty extends RenderSliverSingleBoxAdapter {
   void paint(PaintingContext paintContext, Offset offset) {
     if (constraints.remainingPaintExtent > 0.0 ||
         constraints.scrollOffset + childSize > 0) {
-      paintContext.paintChild(child, offset);
+      paintContext.paintChild(child as RenderObject, offset);
     }
   }
 

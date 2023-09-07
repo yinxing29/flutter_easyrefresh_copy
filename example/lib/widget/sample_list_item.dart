@@ -8,7 +8,7 @@ class SampleListItem extends StatelessWidget {
   final double width;
 
   const SampleListItem({
-    Key key,
+    Key? key,
     this.direction = Axis.vertical,
     this.width = double.infinity,
   }) : super(key: key);

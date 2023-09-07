@@ -15,9 +15,9 @@ class NestedScrollViewPage extends StatefulWidget {
 class NestedScrollViewPageState extends State<NestedScrollViewPage>
     with SingleTickerProviderStateMixin {
   // 滚动控制器
-  ScrollController _scrollController;
+  late ScrollController _scrollController;
   // Tab控制器
-  TabController _tabController;
+  late TabController _tabController;
   int _tabIndex = 0;
   // 列表
   int _listCount = 20;

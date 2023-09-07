@@ -1,5 +1,4 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:math' as math;
 
@@ -19,10 +18,11 @@ import 'dart:math' as math;
 class EasyRefreshPhysics extends ScrollPhysics {
   /// Creates scroll physics that bounce back from the edge.
   const EasyRefreshPhysics({
-    ScrollPhysics parent,}) : super(parent: parent);
+    ScrollPhysics? parent,
+  }) : super(parent: parent);
 
   @override
-  EasyRefreshPhysics applyTo(ScrollPhysics ancestor) {
+  ScrollPhysics applyTo(ScrollPhysics? ancestor) {
     return EasyRefreshPhysics(parent: buildParent(ancestor),);
   }
 
@@ -82,7 +82,8 @@ class EasyRefreshPhysics extends ScrollPhysics {
   double applyBoundaryConditions(ScrollMetrics position, double value) => 0.0;
 
   @override
-  Simulation createBallisticSimulation(ScrollMetrics position, double velocity) {
+  Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
+    // ignore: deprecated_member_use
     final Tolerance tolerance = this.tolerance;
     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
       return BouncingScrollSimulation(

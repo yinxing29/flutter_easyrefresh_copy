@@ -21,45 +21,60 @@ class SwiperPageState extends State<SwiperPage> {
     return Scaffold(
       body: EasyRefresh.builder(
         builder: (context, physics, header, footer){
-          return CustomScrollView(
-            physics: physics,
-            slivers: <Widget>[
-              SliverAppBar(
-                expandedHeight: 100.0,
-                pinned: true,
-                backgroundColor: Colors.white,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: false,
-                  title: Text('Swiper'),
-                ),
+          List<Widget> _listWidget = [];
+          _listWidget.add(
+            SliverAppBar(
+              expandedHeight: 100.0,
+              pinned: true,
+              backgroundColor: Colors.white,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: false,
+                title: Text('Swiper'),
               ),
-              header,
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  Container(
-                    height: 210.0,
-                    child: Swiper(
-                      itemBuilder: (BuildContext context, int index) {
-                        return SampleListItem(direction: Axis.horizontal);
-                      },
-                      itemCount: 5,
-                      viewportFraction: 0.8,
-                      scale: 0.9,
-                      autoplay: true,
-                    ),
+            )
+          );
+
+          if (header != null) {
+            _listWidget.add(header);
+          }
+
+          _listWidget.add(
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Container(
+                  height: 210.0,
+                  child: Swiper(
+                    itemBuilder: (BuildContext context, int index) {
+                      return SampleListItem(direction: Axis.horizontal);
+                    },
+                    itemCount: 5,
+                    viewportFraction: 0.8,
+                    scale: 0.9,
+                    autoplay: true,
                   ),
-                ]),
-              ),
+                ),
+              ]),
+            )
+          );
+
+          _listWidget.add(
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return SampleListItem();
-                  },
-                  childCount: _count
+                        (context, index) {
+                      return SampleListItem();
+                    },
+                    childCount: _count
                 ),
-              ),
-              footer,
-            ],
+              )
+          );
+
+          if (footer != null) {
+            _listWidget.add(footer);
+          }
+
+          return CustomScrollView(
+            physics: physics,
+            slivers: _listWidget,
           );
         },
         onRefresh: () async {

@@ -11,14 +11,14 @@ class BasicPage extends StatefulWidget {
   /// 标题
   final String title;
 
-  const BasicPage(this.title, {Key key}) : super(key: key);
+  const BasicPage(this.title, {Key? key}) : super(key: key);
 
   @override
   _BasicPageState createState() => _BasicPageState();
 }
 class _BasicPageState extends State<BasicPage> {
-  EasyRefreshController _controller;
-  ScrollController _scrollController;
+  late EasyRefreshController _controller;
+  late ScrollController _scrollController;
 
   // 条目总数
   int _count = 20;
@@ -141,7 +141,7 @@ class _BasicPageState extends State<BasicPage> {
         ),
       ),
       persistentFooterButtons: <Widget>[
-        _enableControlFinish ? FlatButton(
+        _enableControlFinish ? TextButton(
             onPressed: () {
               _controller.resetLoadState();
               _controller.finishRefresh();
@@ -149,20 +149,20 @@ class _BasicPageState extends State<BasicPage> {
             child: Text(FlutterI18n.translate(context, 'completeRefresh'),
                 style: TextStyle(color: Colors.black)))
             : SizedBox(width: 0.0, height: 0.0,),
-        _enableControlFinish ? FlatButton(
+        _enableControlFinish ? TextButton(
             onPressed: () {
               _controller.finishLoad(noMore: _count >= 80);
             },
             child: Text(FlutterI18n.translate(context, 'completeLoad'),
                 style: TextStyle(color: Colors.black)))
             : SizedBox(width: 0.0, height: 0.0,),
-        FlatButton(
+        TextButton(
             onPressed: () {
               _controller.callRefresh();
             },
             child: Text(FlutterI18n.translate(context, 'refresh'),
                 style: TextStyle(color: Colors.black))),
-        FlatButton(
+        TextButton(
             onPressed: () {
               _controller.callLoad();
             },

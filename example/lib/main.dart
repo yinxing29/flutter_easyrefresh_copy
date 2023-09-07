@@ -1,6 +1,8 @@
 import 'package:example/page/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
+import 'package:flutter_i18n/loaders/local_translation_loader.dart';
+import 'package:flutter_i18n/loaders/translation_loader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() => runApp(MyApp());
@@ -29,9 +31,10 @@ class _MyAppState extends State<MyApp> {
       home: HomePage(),
       localizationsDelegates: [
         FlutterI18nDelegate(
-          useCountryCode: true,
-          fallbackFile: 'en',
-          path: 'assets/locale'
+          translationLoader: LocalTranslationLoader(
+            useCountryCode: true,
+            basePath: 'assets/locale',
+          ).loadString("en", "json"),
         ),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate

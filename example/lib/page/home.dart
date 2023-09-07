@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   // 页面控制
-  TabController _tabController;
+  late TabController _tabController;
 
   // 初始化
   @override
@@ -71,13 +71,13 @@ class _HomePageState extends State<HomePage>
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
               icon: Icon(Icons.dashboard),
-              title: Text(FlutterI18n.translate(context, 'sample'))),
+              label: FlutterI18n.translate(context, 'sample')),
           BottomNavigationBarItem(
               icon: Icon(Icons.style),
-              title: Text(FlutterI18n.translate(context, 'style'))),
+              label: FlutterI18n.translate(context, 'style')),
           BottomNavigationBarItem(
               icon: Icon(Icons.more_vert),
-              title: Text(FlutterI18n.translate(context, 'more'))),
+              label: FlutterI18n.translate(context, 'more')),
         ],
       ),
     );
